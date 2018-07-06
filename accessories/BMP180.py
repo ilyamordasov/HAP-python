@@ -2,7 +2,7 @@
 # This assumes the bmp180 module is in a package called sensors.
 # Assume you have a bmp module with BMP180 class with read() method.
 from sensors.bmp180 import BMP180 as sensor
-
+import random
 from pyhap.accessory import Accessory
 from pyhap.const import CATEGORY_SENSOR
 
@@ -14,21 +14,26 @@ class BMP180(Accessory):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        serv_temp = self.add_preload_service('TemperatureSensor')
-        self.char_temp = serv_temp.get_characteristic('CurrentTemperature')
+        serv_pressure = self.add_preload_service('PressureSensor')
+        #serv_temp = self.add_preload_service('TemperatureSensor')
 
-        self.sensor = sensor()
+        self.char_pressure = serv_pressure.get_characteristic('CurrentPressure')
+        #self.char_temp = serv_temp.get_characteristic('CurrentTemperature')
 
-    def __getstate__(self):
-        state = super().__getstate__()
-        state['sensor'] = None
-        return state
+        #self.sensor = sensor()
 
-    def __setstate__(self, state):
-        self.__dict__.update(state)
-        self.sensor = sensor()
+    # def __getstate__(self):
+    #     state = super().__getstate__()
+    #     state['sensor'] = None
+    #     return state
 
-    @Accessory.run_at_interval(30)
+    # def __setstate__(self, state):
+    #     self.__dict__.update(state)
+    #     self.sensor = sensor()
+
+    @Accessory.run_at_interval(3) #30
     def run(self):
-        temp, _pressure = self.sensor.read()
-        self.char_temp.set_value(temp)
+        _pressure = random.randint(380, 460) #self.sensor.read()
+        self.char_pressure.set_value(_pressure)
+        #temp = random.randint(180, 260) #self.sensor.read()
+        #self.char_temp.set_value(temp)

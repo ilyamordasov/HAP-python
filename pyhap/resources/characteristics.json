@@ -1404,5 +1404,17 @@
       "UUID": "000000B5-0000-1000-8000-0026BB765291",
       "maxValue": 100,
       "minValue": 0
+   },
+   "CurrentPressure": {
+      "Format": "float",
+      "Permissions": [
+         "pr",
+         "ev"
+      ],
+      "UUID": "00000015-0000-1000-8000-005656765291",
+      "maxValue": 1000,
+      "minStep": 0.1,
+      "minValue": 0,
+      "unit": "mmHg"
    }
 }
