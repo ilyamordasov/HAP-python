@@ -23,8 +23,10 @@ class G201S(Accessory):
 	def turn_on(self, value):
 		if value:
 			print("Чайник включен {}".format(value))
+			self.g201s.turn_on();
 		else:
 			print("Чайник выключен {}".format(value))
+			self.g201s.turn_off();
 
 	def set_temperature(self, value):
 		self.char_set.set_value(value);
