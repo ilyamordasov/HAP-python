@@ -15,6 +15,7 @@ import pyhap.loader as loader
 # The below package can be found in the HAP-python github repo under accessories/
 from accessories.TemperatureSensor import TemperatureSensor
 from accessories.BMP180 import BMP180
+from accessories.G201S import G201S
 
 logging.basicConfig(level=logging.INFO)
 
@@ -22,11 +23,13 @@ logging.basicConfig(level=logging.INFO)
 def get_bridge(driver):
     """Call this method to get a Bridge instead of a standalone accessory."""
     bridge = Bridge(driver, 'Bridge')
-    temp_sensor = TemperatureSensor(driver, 'CurrentTemperature')
-    bmp180_sensor = BMP180(driver, 'CurrentPressure')
+    # temp_sensor = TemperatureSensor(driver, 'CurrentTemperature')
+    # bmp180_sensor = BMP180(driver, 'CurrentPressure')
+    g201s_sensor = G201S(driver, 'SmartKettle')
 
-    bridge.add_accessory(temp_sensor)
-    bridge.add_accessory(bmp180_sensor)
+    # bridge.add_accessory(temp_sensor)
+    # bridge.add_accessory(bmp180_sensor)
+    bridge.add_accessory(g201s_sensor)
 
     return bridge
 
