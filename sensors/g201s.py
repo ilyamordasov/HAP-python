@@ -23,15 +23,14 @@ class G201S(sensorbase.SensorBase):
     
     def write_handle(self, device, handle, value, increment=True):
         global index
+        val = []
         if handle == 0x000e:
-            val = []
             val.append(0x55)
             val.append(index)
             for i in value:
                 val.append(i)
             val.append(0xAA)
         else:
-            val = []
             for i in value:
                 val.append(i)
         
@@ -48,6 +47,7 @@ class G201S(sensorbase.SensorBase):
             self.write_handle(device, 0x000e, [0xFF, 0xDF, 0x24, 0x0E, 0xC6, 0x94, 0xD1, 0x97, 0x43], False)
             self.write_handle(device, 0x000c, [0x01, 0x00])
             self.write_handle(device, 0x000e, [0x01])
+            self.write_handle(device, 0x000e, [0x05, 0x00, 0x00, int(hex(100), 16), 0x00])
             self.write_handle(device, 0x000e, [0x03])
 
         finally:
@@ -69,18 +69,33 @@ class G201S(sensorbase.SensorBase):
 
     def set_temperature(self, value):
         print("set temperature {}".format(value))
-        # try:
-        #     adapter.start()
-        #     device = adapter.connect(YOUR_DEVICE_ADDRESS, address_type=ADDRESS_TYPE)
-        #     device.subscribe("6e400003-b5a3-f393-e0a9-e50e24dcca9e", callback=handle_data)
+        try:
+            adapter.start()
+            device = adapter.connect(YOUR_DEVICE_ADDRESS, address_type=ADDRESS_TYPE)
+            device.subscribe("6e400003-b5a3-f393-e0a9-e50e24dcca9e", callback=handle_data)
 
-        #     write_handle(0x000e, bytearray([0x00, 0xFF, 0xDF, 0x24, 0x0E, 0xC6, 0x94, 0xD1, 0x97, 0x43]), False)
-        #     write_handle(0x000c, bytearray([0x01, 0x00]))
-        #     write_handle(0x000e, bytearray([0x01]))
-        #     write_handle(0x000e, bytearray([0x06]))
+            self.write_handle(device, 0x000e, [0x00, 0xFF, 0xDF, 0x24, 0x0E, 0xC6, 0x94, 0xD1, 0x97, 0x43], False)
+            self.write_handle(device, 0x000c, [0x01, 0x00])
+            self.write_handle(device, 0x000e, [0x01])
+            self.write_handle(device, 0x000e, [0x05, 0x00, 0x00, int(hex(value), 16), 0x00])
+            self.write_handle(device, 0x000e, [0x03])
 
-        # finally:
-        #     adapter.stop() 
+        finally:
+            adapter.stop()
+
+    def get_temperature(self):
+        try:
+            adapter.start()
+            device = adapter.connect(YOUR_DEVICE_ADDRESS, address_type=ADDRESS_TYPE)
+            device.subscribe("6e400003-b5a3-f393-e0a9-e50e24dcca9e", callback=handle_data)
+
+            self.write_handle(device, 0x000e, [0x00, 0xFF, 0xDF, 0x24, 0x0E, 0xC6, 0x94, 0xD1, 0x97, 0x43], False)
+            self.write_handle(device, 0x000c, [0x01, 0x00])
+            self.write_handle(device, 0x000e, [0x01])
+            self.write_handle(device, 0x000e, [0x06])
+            print("get temperature")
+        finally:
+            adapter.stop()
 
     def _update_sensor_data(self):
         print("update")
