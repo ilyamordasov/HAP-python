@@ -13,7 +13,7 @@ class G201S(sensorbase.SensorBase):
         super(G201S, self).__init__(update_callback = self._update_sensor_data)
 
     
-    def handle_data(handle, value):
+    def handle_data(self, handle, value):
         """
         handle -- integer, characteristic read handle the data was received on
         value -- bytearray, the data returned in the notification
@@ -23,34 +23,32 @@ class G201S(sensorbase.SensorBase):
     
     def write_handle(self, device, handle, value, increment=True):
         global index
-        # if handle == 0x000e:
-        #     val = [0x55, bytes(index), value, 0xAA]
-        # else:
-        #     val = [bytes(index), value]
+        if handle == 0x000e:
+            val = []
+            val.append(0x55)
+            val.append(index)
+            for i in value:
+                val.append(i)
+            val.append(0xAA)
+        else:
+            val = []
+            for i in value:
+                val.append(i)
         
-        # device.char_write_handle(handle, val, True)
-        # if increment: index += 1
-        
-        device.char_write_handle(0x000e, bytearray([0x55, 0x00, 0xFF, 0xDF, 0x24, 0x0E, 0xC6, 0x94, 0xD1, 0x97, 0x43, 0xAA]))
-        device.char_write_handle(0x000c, bytearray([0x01, 0x00]))
-        device.char_write_handle(0x000e, bytearray([0x55, 0x01, 0x01, 0xAA]))
-        device.char_write_handle(0x000e, bytearray([0x55, 0x02, 0x03, 0xAA]))
-        print(val)
+        val = bytearray(val)
+        device.char_write_handle(handle, val, True)
+        if increment: index += 1
 
     def turn_on(self):
         try:
             adapter.start()
             device = adapter.connect(YOUR_DEVICE_ADDRESS, address_type=ADDRESS_TYPE)
-            #device.subscribe("6e400003-b5a3-f393-e0a9-e50e24dcca9e", callback=self.handle_data)
+            device.subscribe("6e400003-b5a3-f393-e0a9-e50e24dcca9e", callback=self.handle_data)
 
-            # self.write_handle(device, 0x000e, bytearray([0xFF, 0xDF, 0x24, 0x0E, 0xC6, 0x94, 0xD1, 0x97, 0x43]), False)
-            # self.write_handle(device, 0x000c, bytearray([0x01, 0x00]))
-            # self.write_handle(device, 0x000e, bytearray([0x01]))
-            # self.write_handle(device, 0x000e, bytearray([0x03]))
-            device.char_write_handle(0x000e, bytearray([0x55, 0x00, 0xFF, 0xDF, 0x24, 0x0E, 0xC6, 0x94, 0xD1, 0x97, 0x43, 0xAA]))
-            device.char_write_handle(0x000c, bytearray([0x01, 0x00]))
-            device.char_write_handle(0x000e, bytearray([0x55, 0x01, 0x01, 0xAA]))
-            device.char_write_handle(0x000e, bytearray([0x55, 0x02, 0x03, 0xAA]))
+            self.write_handle(device, 0x000e, [0xFF, 0xDF, 0x24, 0x0E, 0xC6, 0x94, 0xD1, 0x97, 0x43], False)
+            self.write_handle(device, 0x000c, [0x01, 0x00])
+            self.write_handle(device, 0x000e, [0x01])
+            self.write_handle(device, 0x000e, [0x03])
 
         finally:
             adapter.stop()
@@ -59,17 +57,12 @@ class G201S(sensorbase.SensorBase):
         try:
             adapter.start()
             device = adapter.connect(YOUR_DEVICE_ADDRESS, address_type=ADDRESS_TYPE)
-            #device.subscribe("6e400003-b5a3-f393-e0a9-e50e24dcca9e", callback=self.handle_data)
+            device.subscribe("6e400003-b5a3-f393-e0a9-e50e24dcca9e", callback=self.handle_data)
 
-            # self.write_handle(device, 0x000e, bytearray([0x00, 0xFF, 0xDF, 0x24, 0x0E, 0xC6, 0x94, 0xD1, 0x97, 0x43]), False)
-            # self.write_handle(device, 0x000c, bytearray([0x01, 0x00]))
-            # self.write_handle(device, 0x000e, bytearray([0x01]))
-            # self.write_handle(device, 0x000e, bytearray([0x04]))
-            
-            device.char_write_handle(0x000e, bytearray([0x55, 0x00, 0xFF, 0xDF, 0x24, 0x0E, 0xC6, 0x94, 0xD1, 0x97, 0x43, 0xAA]))
-            device.char_write_handle(0x000c, bytearray([0x01, 0x00]))
-            device.char_write_handle(0x000e, bytearray([0x55, 0x01, 0x01, 0xAA]))
-            device.char_write_handle(0x000e, bytearray([0x55, 0x02, 0x04, 0xAA]))
+            self.write_handle(device, 0x000e, [0x00, 0xFF, 0xDF, 0x24, 0x0E, 0xC6, 0x94, 0xD1, 0x97, 0x43], False)
+            self.write_handle(device, 0x000c, [0x01, 0x00])
+            self.write_handle(device, 0x000e, [0x01])
+            self.write_handle(device, 0x000e, [0x04])
 
         finally:
             adapter.stop()        
