@@ -34,8 +34,8 @@ class G201S(Accessory):
 		print(value)
 
 	def get_temperature(self, value):
-		self.g201s.set_temperature(value)
-		print("Температура чайник 25°C")
+		val = self.g201s.get_temperature(value)
+		print("Температура чайник {}°C".format(val))
 
 	def turn_off(self, value):
 		super().stop()
