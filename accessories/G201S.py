@@ -12,7 +12,6 @@ class G201S(Accessory):
 
 		serv_kettle = self.add_preload_service('SmartKettle')
 		g201s = sensor()
-		g201s.set_temperature(4)
 		self.g201s = g201s
 
 		self.char_on = serv_kettle.configure_char('On', setter_callback=self.turn_on)
