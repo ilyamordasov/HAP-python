@@ -1,6 +1,7 @@
 import pygatt
 import sensors.sensorbase as sensorbase
 from binascii import hexlify
+import time
 
 YOUR_DEVICE_ADDRESS = "E5:FB:01:09:F7:B4"
 ADDRESS_TYPE = pygatt.BLEAddressType.random
@@ -42,7 +43,8 @@ class G201S(sensorbase.SensorBase):
         try:
             adapter.start()
             device = adapter.connect(YOUR_DEVICE_ADDRESS, address_type=ADDRESS_TYPE)
-            device.subscribe("6e400003-b5a3-f393-e0a9-e50e24dcca9e", callback=self.handle_data)
+            time.sleep(1)
+            #device.subscribe("6e400003-b5a3-f393-e0a9-e50e24dcca9e", callback=self.handle_data)
 
             self.write_handle(device, 0x000e, [0xFF, 0xDF, 0x24, 0x0E, 0xC6, 0x94, 0xD1, 0x97, 0x43], False)
             self.write_handle(device, 0x000c, [0x01, 0x00])
@@ -57,7 +59,8 @@ class G201S(sensorbase.SensorBase):
         try:
             adapter.start()
             device = adapter.connect(YOUR_DEVICE_ADDRESS, address_type=ADDRESS_TYPE)
-            device.subscribe("6e400003-b5a3-f393-e0a9-e50e24dcca9e", callback=self.handle_data)
+            time.sleep(1)
+            #device.subscribe("6e400003-b5a3-f393-e0a9-e50e24dcca9e", callback=self.handle_data)
 
             self.write_handle(device, 0x000e, [0x00, 0xFF, 0xDF, 0x24, 0x0E, 0xC6, 0x94, 0xD1, 0x97, 0x43], False)
             self.write_handle(device, 0x000c, [0x01, 0x00])
@@ -72,7 +75,8 @@ class G201S(sensorbase.SensorBase):
         try:
             adapter.start()
             device = adapter.connect(YOUR_DEVICE_ADDRESS, address_type=ADDRESS_TYPE)
-            device.subscribe("6e400003-b5a3-f393-e0a9-e50e24dcca9e", callback=handle_data)
+            time.sleep(1)
+            #device.subscribe("6e400003-b5a3-f393-e0a9-e50e24dcca9e", callback=self.handle_data)
 
             self.write_handle(device, 0x000e, [0x00, 0xFF, 0xDF, 0x24, 0x0E, 0xC6, 0x94, 0xD1, 0x97, 0x43], False)
             self.write_handle(device, 0x000c, [0x01, 0x00])
@@ -87,7 +91,8 @@ class G201S(sensorbase.SensorBase):
         try:
             adapter.start()
             device = adapter.connect(YOUR_DEVICE_ADDRESS, address_type=ADDRESS_TYPE)
-            device.subscribe("6e400003-b5a3-f393-e0a9-e50e24dcca9e", callback=handle_data)
+            time.sleep(1)
+            #device.subscribe("6e400003-b5a3-f393-e0a9-e50e24dcca9e", callback=self.handle_data)
 
             self.write_handle(device, 0x000e, [0x00, 0xFF, 0xDF, 0x24, 0x0E, 0xC6, 0x94, 0xD1, 0x97, 0x43], False)
             self.write_handle(device, 0x000c, [0x01, 0x00])
