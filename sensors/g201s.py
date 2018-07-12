@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import pygatt
 import sensors.sensorbase as sensorbase
 from binascii import hexlify
@@ -13,15 +15,6 @@ cur_temp = 0
 class G201S(sensorbase.SensorBase):
     def __init__(self):
         super(G201S, self).__init__(update_callback = self._update_sensor_data)
-
-    
-    def handle_data(self, handle, value):
-        """
-        handle -- integer, characteristic read handle the data was received on
-        value -- bytearray, the data returned in the notification
-        """
-        print("Received data: %s" % hexlify(value))
-
     
     def write_handle(self, device, handle, value, increment=True):
         global index
@@ -46,9 +39,6 @@ class G201S(sensorbase.SensorBase):
         try:
             adapter.start()
             device = adapter.connect(YOUR_DEVICE_ADDRESS, address_type=ADDRESS_TYPE)
-            time.sleep(1)
-            #device.subscribe("6e400003-b5a3-f393-e0a9-e50e24dcca9e", callback=self.handle_data)
-
             self.write_handle(device, 0x000e, [0xFF, 0xDF, 0x24, 0x0E, 0xC6, 0x94, 0xD1, 0x97, 0x43], False)
             self.write_handle(device, 0x000c, [0x01, 0x00])
             self.write_handle(device, 0x000e, [0x01])
@@ -64,15 +54,12 @@ class G201S(sensorbase.SensorBase):
         try:
             adapter.start()
             device = adapter.connect(YOUR_DEVICE_ADDRESS, address_type=ADDRESS_TYPE)
-            time.sleep(1)
-            #device.subscribe("6e400003-b5a3-f393-e0a9-e50e24dcca9e", callback=self.handle_data)
-
-            self.write_handle(device, 0x000e, [0x00, 0xFF, 0xDF, 0x24, 0x0E, 0xC6, 0x94, 0xD1, 0x97, 0x43], False)
+            self.write_handle(device, 0x000e, [0xFF, 0xDF, 0x24, 0x0E, 0xC6, 0x94, 0xD1, 0x97, 0x43], False)
             self.write_handle(device, 0x000c, [0x01, 0x00])
             self.write_handle(device, 0x000e, [0x01])
             self.write_handle(device, 0x000e, [0x04])
-            value = device.char_read("6e400003-b5a3-f393-e0a9-e50e24dcca9e")
-            print("Tried to switch off, returned {}".format(value))
+            cur_temp = self.get_temperature()
+            print("Tried to switch off, returned {}".format(cur_temp))
 
         finally:
             adapter.stop()        
@@ -81,21 +68,26 @@ class G201S(sensorbase.SensorBase):
         global index
         index = 0
         print("set temperature {}".format(value))
-        try:
-            adapter.start()
-            device = adapter.connect(YOUR_DEVICE_ADDRESS, address_type=ADDRESS_TYPE)
-            time.sleep(1)
-            #device.subscribe("6e400003-b5a3-f393-e0a9-e50e24dcca9e", callback=self.handle_data)
+        # try:
+        #     adapter.start()
+        #     device = adapter.connect(YOUR_DEVICE_ADDRESS, address_type=ADDRESS_TYPE)
+        #     self.write_handle(device, 0x000e, [0xFF, 0xDF, 0x24, 0x0E, 0xC6, 0x94, 0xD1, 0x97, 0x43], False)
+        #     self.write_handle(device, 0x000c, [0x01, 0x00])
+        #     self.write_handle(device, 0x000e, [0x01])
+        #     self.write_handle(device, 0x000e, [0x05, 0x00, 0x00, int(hex(value), 16), 0x00])
+        #     self.write_handle(device, 0x000e, [0x03])
+        #     self.get_temperature()
 
-            self.write_handle(device, 0x000e, [0x00, 0xFF, 0xDF, 0x24, 0x0E, 0xC6, 0x94, 0xD1, 0x97, 0x43], False)
-            self.write_handle(device, 0x000c, [0x01, 0x00])
-            self.write_handle(device, 0x000e, [0x01])
-            self.write_handle(device, 0x000e, [0x05, 0x00, 0x00, int(hex(value), 16), 0x00])
-            self.write_handle(device, 0x000e, [0x03])
-            self.get_temperature()
-
-        finally:
-            adapter.stop()
+        # finally:
+        #     adapter.stop()
+        if self.get_temperature() < value:
+            self.turn_on()
+            while True:
+                if self.get_temperature() == value:
+                    self.turn_off()
+                    break
+        else:
+            print('{}°C'.format(self.get_temperature()))
 
     def get_temperature(self):
         global index
@@ -103,16 +95,14 @@ class G201S(sensorbase.SensorBase):
         try:
             adapter.start()
             device = adapter.connect(YOUR_DEVICE_ADDRESS, address_type=ADDRESS_TYPE)
-            time.sleep(1)
-            #device.subscribe("6e400003-b5a3-f393-e0a9-e50e24dcca9e", callback=self.handle_data)
-
-            self.write_handle(device, 0x000e, [0x00, 0xFF, 0xDF, 0x24, 0x0E, 0xC6, 0x94, 0xD1, 0x97, 0x43], False)
+            self.write_handle(device, 0x000e, [0xFF, 0xDF, 0x24, 0x0E, 0xC6, 0x94, 0xD1, 0x97, 0x43], False)
             self.write_handle(device, 0x000c, [0x01, 0x00])
             self.write_handle(device, 0x000e, [0x01])
             self.write_handle(device, 0x000e, [0x06])
             print("get temperature")
             value = device.char_read("6e400003-b5a3-f393-e0a9-e50e24dcca9e")
-            value = value[23:25]
+            value = hexlify(value)
+            value = value[16:18]
             cur_temp = int(value, 16)
             print("Current temperature of kettle is {}".format(cur_temp))
             return cur_temp

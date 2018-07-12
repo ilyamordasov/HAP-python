@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # An Accessory for a Smart Kettle.
 from sensors.g201s import G201S as sensor
 from pyhap.accessory import Accessory
@@ -30,11 +32,11 @@ class G201S(Accessory):
 	def set_temperature(self, value):
 		self.char_set.set_value(value);
 		self.g201s.set_temperature(value)
-		print(value)
+		print("Температура чайника {}°C".format(value))
 
 	def get_temperature(self, value):
 		val = self.g201s.get_temperature(value)
-		print("Температура чайник {}°C".format(val))
+		print("Температура чайника {}°C".format(val))
 
 	def turn_off(self, value):
 		super().stop()
