@@ -18,7 +18,7 @@ class G201S(Accessory):
 
 		self.char_on = serv_kettle.configure_char('On', setter_callback=self.turn_on)
 		self.char_set = serv_kettle.configure_char('TargetTemperature', setter_callback=self.set_temperature)
-		self.char_get = serv_kettle.configure_char('CurrentTemperature', setter_callback=self.get_temperature)
+		self.char_get = serv_kettle.configure_char('CurrentTemperature', getter_callback=self.get_temperature)
 		#self.char_get = serv_kettle.get_characteristic('CurrentTemperature')
 
 	def turn_on(self, value):
@@ -32,11 +32,12 @@ class G201S(Accessory):
 	def set_temperature(self, value):
 		self.char_set.set_value(value);
 		self.g201s.set_temperature(value)
-		print("Температура чайника {}°C".format(value))
+		print("Температура чайника {}C".format(value))
 
-	def get_temperature(self, value):
-		val = self.g201s.get_temperature(value)
-		print("Температура чайника {}°C".format(val))
+	def get_temperature(self):
+		val = self.g201s.get_temperature()
+		print("temp kettle get")
+		return val
 
 	def turn_off(self, value):
 		super().stop()
