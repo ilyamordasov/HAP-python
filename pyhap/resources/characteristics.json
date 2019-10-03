@@ -1304,9 +1304,9 @@
          "ev"
       ],
       "UUID": "00000035-0000-1000-8000-0026BB765291",
-      "maxValue": 38,
-      "minStep": 0.1,
-      "minValue": 10,
+      "maxValue": 100,
+      "minStep": 1,
+      "minValue": 0,
       "unit": "celsius"
    },
    "TargetTiltAngle": {
@@ -1344,8 +1344,8 @@
       ],
       "UUID": "00000036-0000-1000-8000-0026BB765291",
       "ValidValues": {
-         "Celsius": 0,
-         "Fahrenheit": 1
+         "Celsius": 1,
+         "Fahrenheit": 0
       }
    },
    "VOCDensity": {

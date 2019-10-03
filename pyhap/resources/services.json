@@ -526,5 +526,26 @@
          "PositionState"
       ],
       "UUID": "0000008C-0000-1000-8000-0026BB765291"
+   },
+   "PressureSensor": {
+      "OptionalCharacteristics": [
+         "StatusActive",
+         "StatusFault",
+         "StatusLowBattery",
+         "StatusTampered",
+         "Name"
+      ],
+      "RequiredCharacteristics": [
+         "CurrentPressure"
+      ],
+      "UUID": "E863F10F-079E-48FF-8F27-9C2605A29F52"
+   },
+   "SmartKettle": {
+      "RequiredCharacteristics": [
+         "On",
+         "TargetTemperature",
+         "CurrentTemperature"
+      ],
+      "UUID": "00000043-0000-1000-8000-0026BB765291"
    }
 }
